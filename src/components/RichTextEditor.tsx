@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { Bold, Italic, Underline, List, ListOrdered, AlignLeft, AlignCenter, AlignRight, Strikethrough, Heading1 } from 'lucide-react';
 
 interface RichTextEditorProps {
   value: string;
@@ -14,13 +15,8 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
 
   useEffect(() => {
     if (editorRef.current) {
-      if (value) {
-        editorRef.current.innerHTML = value;
-        setIsEmpty(false);
-      } else {
-        editorRef.current.innerHTML = '';
-        setIsEmpty(true);
-      }
+      editorRef.current.innerHTML = value || '';
+      setIsEmpty(!value);
     }
   }, [value]);
 
@@ -28,10 +24,7 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
     if (editorRef.current) {
       const content = editorRef.current.innerHTML;
       onChange(content);
-      setIsEmpty(content === '' || content === '<br>');
-      
-      // Ensure the text direction is always left-to-right
-      editorRef.current.style.direction = 'ltr';
+      setIsEmpty(!content || content === '<br>');
     }
   };
 
@@ -44,92 +37,42 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
   };
 
   return (
-    <div className="border theme-border rounded-md overflow-hidden">
+    <div className="border rounded-xl shadow-md bg-white dark:bg-gray-900 transition-all">
       {/* Toolbar */}
-      <div className="flex items-center p-2 border-b theme-border flex-wrap" style={{ backgroundColor: 'var(--editor-toolbar-bg)' }}>
-        <button
-          type="button"
-          onClick={() => formatText('bold')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Bold"
-        >
-          <span className="font-bold">B</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => formatText('italic')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Italic"
-        >
-          <span className="italic">I</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => formatText('underline')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Underline"
-        >
-          <span className="underline">U</span>
-        </button>
-        <div className="h-6 w-px mx-2" style={{ backgroundColor: 'var(--border-color)' }}></div>
-        <button
-          type="button"
-          onClick={() => formatText('insertUnorderedList')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Bullet List"
-        >
-          <span>•</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => formatText('insertOrderedList')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Numbered List"
-        >
-          <span>1.</span>
-        </button>
-        <div className="h-6 w-px mx-2" style={{ backgroundColor: 'var(--border-color)' }}></div>
-        <button
-          type="button"
-          onClick={() => formatText('justifyLeft')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Align Left"
-        >
-          <span>≡</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => formatText('justifyCenter')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Align Center"
-        >
-          <span>≡</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => formatText('justifyRight')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Align Right"
-        >
-          <span>≡</span>
-        </button>
-        <div className="h-6 w-px mx-2" style={{ backgroundColor: 'var(--border-color)' }}></div>
-        <button
-          type="button"
-          onClick={() => formatText('strikeThrough')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Strike Through"
-        >
-          <span className="line-through">S</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => formatText('formatBlock', 'H1')}
-          className="p-2 theme-hover rounded mr-1 theme-text-primary"
-          title="Heading"
-        >
-          <span className="text-lg font-bold">T</span>
-        </button>
+      <div className="flex flex-wrap rounded-t-xl rounded-b-xl items-center p-2 border-b bg-gray-50 dark:bg-gray-800 gap-1">
+        <ToolbarButton onClick={() => formatText('bold')} title="Bold">
+          <Bold size={16} />
+        </ToolbarButton>
+        <ToolbarButton onClick={() => formatText('italic')} title="Italic">
+          <Italic size={16} />
+        </ToolbarButton>
+        <ToolbarButton onClick={() => formatText('underline')} title="Underline">
+          <Underline size={16} />
+        </ToolbarButton>
+        <Separator />
+        <ToolbarButton onClick={() => formatText('insertUnorderedList')} title="Bullet List">
+          <List size={16} />
+        </ToolbarButton>
+        <ToolbarButton onClick={() => formatText('insertOrderedList')} title="Numbered List">
+          <ListOrdered size={16} />
+        </ToolbarButton>
+        <Separator />
+        <ToolbarButton onClick={() => formatText('justifyLeft')} title="Align Left">
+          <AlignLeft size={16} />
+        </ToolbarButton>
+        <ToolbarButton onClick={() => formatText('justifyCenter')} title="Align Center">
+          <AlignCenter size={16} />
+        </ToolbarButton>
+        <ToolbarButton onClick={() => formatText('justifyRight')} title="Align Right">
+          <AlignRight size={16} />
+        </ToolbarButton>
+        <Separator />
+        <ToolbarButton onClick={() => formatText('strikeThrough')} title="Strike Through">
+          <Strikethrough size={16} />
+        </ToolbarButton>
+        <ToolbarButton onClick={() => formatText('formatBlock', 'H1')} title="Heading">
+          <Heading1 size={16} />
+        </ToolbarButton>
       </div>
 
       {/* Editor */}
@@ -137,17 +80,41 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
         <div
           ref={editorRef}
           contentEditable
-          className="w-full h-64 md:h-96 p-4 outline-none overflow-y-auto"
+          className="w-full h-64 md:h-96 p-4 outline-none overflow-y-auto text-left"
           onInput={handleInput}
-          style={{ minHeight: '200px', direction: 'ltr' }}
+          style={{
+            minHeight: '200px',
+            direction: 'ltr',
+            textAlign: 'left',
+          }}
           data-placeholder={placeholder}
         />
+
         {isEmpty && placeholder && (
-          <div className="absolute top-4 left-4 pointer-events-none" style={{ color: 'var(--editor-placeholder)' }}>
+          <div className="absolute top-4 left-4 pointer-events-none text-gray-400">
             {placeholder}
           </div>
         )}
       </div>
     </div>
   );
-} 
+}
+
+function ToolbarButton({ onClick, title, children }: { onClick: () => void; title: string; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+      title={title}
+    >
+      {children}
+    </button>
+  );
+}
+
+function Separator() {
+  return (
+    <div className="h-5 w-px mx-1 bg-gray-300 dark:bg-gray-600"></div>
+  );
+}
