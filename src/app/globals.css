@@ -3,6 +3,21 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --card-background: #ffffff;
+  --card-border: #e5e7eb;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --success: #10b981;
+  --text-primary: #171717;
+  --text-secondary: #4b5563;
+  --text-tertiary: #9ca3af;
+  --border-color: #e5e7eb;
+  --hover-bg: #f3f4f6;
+  --editor-toolbar-bg: #f9fafb;
+  --editor-border: #e5e7eb;
+  --editor-placeholder: #9ca3af;
 }
 
 @theme inline {
@@ -16,6 +31,21 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --card-background: #1f2937;
+    --card-border: #374151;
+    --primary: #3b82f6;
+    --primary-hover: #60a5fa;
+    --danger: #ef4444;
+    --danger-hover: #f87171;
+    --success: #10b981;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #6b7280;
+    --border-color: #374151;
+    --hover-bg: #374151;
+    --editor-toolbar-bg: #1f2937;
+    --editor-border: #374151;
+    --editor-placeholder: #6b7280;
   }
 }
 
@@ -23,4 +53,124 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Force LTR text direction for all elements in the editor */
+[contenteditable],
+[contenteditable] div,
+[contenteditable] p,
+[contenteditable] span,
+[contenteditable] h1,
+[contenteditable] h2,
+[contenteditable] h3,
+[contenteditable] h4,
+[contenteditable] h5,
+[contenteditable] h6,
+[contenteditable] ul,
+[contenteditable] ol,
+[contenteditable] li,
+[contenteditable] blockquote {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Rich Text Editor Styles */
+[contenteditable] {
+  outline: none;
+  color: var(--text-primary);
+  background-color: var(--card-background);
+  direction: ltr !important;
+  unicode-bidi: bidi-override;
+  text-align: left !important;
+}
+
+[contenteditable] * {
+  direction: ltr !important;
+  unicode-bidi: bidi-override;
+  text-align: left !important;
+}
+
+[contenteditable]:empty:before {
+  content: attr(data-placeholder);
+  color: var(--editor-placeholder);
+  font-style: italic;
+}
+
+[contenteditable] ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+[contenteditable] ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
+[contenteditable] h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+[contenteditable] blockquote {
+  border-left: 3px solid var(--border-color);
+  padding-left: 1rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+[contenteditable] a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+[contenteditable] p {
+  margin-bottom: 0.5rem;
+}
+
+/* Custom theme classes */
+.theme-card {
+  background-color: var(--card-background);
+  border-color: var(--card-border);
+}
+
+.theme-text-primary {
+  color: var(--text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+
+.theme-text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.theme-border {
+  border-color: var(--border-color);
+}
+
+.theme-hover:hover {
+  background-color: var(--hover-bg);
+}
+
+.theme-button-primary {
+  background-color: var(--primary);
+}
+
+.theme-button-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.theme-button-danger {
+  background-color: var(--danger);
+}
+
+.theme-button-danger:hover {
+  background-color: var(--danger-hover);
+}
+
+.theme-button-success {
+  background-color: var(--success);
 }
